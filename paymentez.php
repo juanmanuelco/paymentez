@@ -239,6 +239,8 @@ function wpse_save_meta_fields($post_id)
                 //$order->update_status('refunded');
                 $order->add_order_note('Su pago se ha reversado Satisfactoriamente. Código Transacción: ' . $transaction_id);
                 update_table1($trancode, 'wc-refunded');
+                $order->set_status('refunded');
+                $order->save();
             } else {
                 if ($statusorder == 'refunded') {
                     insert_data1('1', 'Error Reverso', 'El pago ha sido reversado previamente', $trancode, $transaction_id);
@@ -1573,13 +1575,13 @@ if (!function_exists('woocommerce_paymentez_gateway')) {
             // Procesa el pago e informa a WC del mismo.
             function process_payment($orderId)
             {
-                //global $woocommerce;
+                global $woocommerce;
                 $order = new WC_Order($orderId);
                 //$order->update_status('on-hold', __( 'Esperando Pago', 'woocommerce' ));
                 // Reduce stock levels
                 //  $order->reduce_order_stock();
                 // Paso importantisímo ya que vacia el carrito
-                // $woocommerce->cart->empty_cart();
+                $woocommerce->cart->empty_cart();
                 //  $parametersArgs = $this->get_params_post( $orderId );
                 return array(
                     'result' => 'success',

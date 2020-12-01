@@ -262,10 +262,12 @@ if ($statusOrder != 'completed' && $statusOrder != 'cancelled' && $statusOrder !
 					   __(" |Pedido:  ", "pg_woocommerce"). $dev_reference .
 					   __(" |Mensaje:  ", "pg_woocommerce"). $message);
 			   
-        $order->update_status('completed');
+        $order->update_status('processing');
+        $order->add_meta_data('transaction', $transaction_id);
         $order->reduce_order_stock();
         $woocommerce->cart->empty_cart(); 
         $statusOrder = $order->get_status();
+        $order->save();
         if (!headers_sent()) {
             header("HTTP/1.0 200 confirmado");
         }
@@ -285,7 +287,8 @@ if ($statusOrder != 'completed' && $statusOrder != 'cancelled' && $statusOrder !
 
               $order->update_status('failed');
               $woocommerce->cart->empty_cart();
-              $statusOrder = $order->get_status(); 
+              $statusOrder = $order->get_status();
+                $order->save();
             if (!headers_sent()) {
                 header("HTTP/1.0 204 confirmado");
             }
@@ -315,10 +318,11 @@ if ($statusOrder != 'completed' && $statusOrder != 'cancelled' && $statusOrder !
 					   __(" |Pedido:  ", "pg_woocommerce"). $dev_reference .
 					   __(" |Mensaje:  ", "pg_woocommerce"). $message);
 			   
-        $order->update_status('completed');
+        $order->update_status('processing');
         $order->reduce_order_stock();
         $woocommerce->cart->empty_cart(); 
         $statusOrder = $order->get_status();
+        $order->save();
     if (!headers_sent()) {
         header("HTTP/1.0 204 confirmado");
     }
