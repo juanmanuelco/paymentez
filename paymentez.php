@@ -75,13 +75,23 @@ function order_my_custom()
     global $post;
     // Use nonce for verification to secure data sending
     wp_nonce_field(basename(__FILE__), 'wpse_our_nonce');
-    ?>
-    <!-- my custom value input -->
-    <input type="text" name="wpse_value" value="">
-    <input type="submit" value="Refund" class="button-primary">
-    <a href="https://www.paymentez.com" style=" color: #5FA000" target="_blank">www.paymentez.com</a>
-    </br>
-    <?php
+    $currentOrder = wc_get_order($post->ID);
+    if($currentOrder == false) return;
+    $payment = $currentOrder->get_payment_method();
+    $status = $currentOrder->get_status();
+    if($status == 'completed' && $payment == 'paymentez'){
+        ?>
+        <!-- my custom value input -->
+        <input type="text" name="wpse_value" value="">
+        <input type="submit" value="Refund" class="button-primary">
+        <a href="https://www.paymentez.com" style=" color: #5FA000" target="_blank">www.paymentez.com</a>
+        </br>
+        <?php
+    }else{
+        ?>
+        <p>La orden debe haberse hecho con paymentez y debe estar en estado completada</p>
+        <?php
+    }
 }
 
 
