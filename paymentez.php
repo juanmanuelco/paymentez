@@ -239,6 +239,9 @@ function wpse_save_meta_fields($post_id)
                 //$order->update_status('refunded');
                 $order->add_order_note('Su pago se ha reversado Satisfactoriamente. Código Transacción: ' . $transaction_id);
                 update_table1($trancode, 'wc-refunded');
+                remove_action('save_post', 'wpse_save_meta_fields');
+                remove_action('new_to_publish', 'wpse_save_meta_fields');
+                $order->set_status('refunded');
                 $order->save();
             } else {
                 if ($statusorder == 'refunded') {
